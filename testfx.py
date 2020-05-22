@@ -29,5 +29,5 @@ if __name__ == "__main__":
     else:
         print('测试失败!')
 
-    a=101
-    print( str(a)==str(a)[::-1])
+    a = 1012
+    print(str(a) == str(a)[::-1])
