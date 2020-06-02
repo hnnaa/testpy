@@ -2,8 +2,12 @@
 
 # reduce() and map()
 from functools import reduce
+import testzhuangshiqi
+
 
 DIGITS = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+
+buf = {}
 
 
 def combine(x, y):
@@ -20,7 +24,17 @@ def str2float(s):
            + reduce(lambda x, y: 0.1 * x + y, map(lambda x: DIGITS[x], s[index + 1:].reverse()))
 
 
+def zs(a, b):
+    def func_wrapper(func):
+        global buf
+        buf[a + "_" + b] = func
+        return func
+
+    return func_wrapper
+
+
 if __name__ == "__main__":
+    buf2 = buf
     print(reduce(combine, map(str2int, "1231231")))
     print(reduce(lambda x, y: 10 * x + y, map(lambda x: DIGITS[x], "12321313123")))
     print('str2float(\'123.456\') =', str2float('123.456'))
@@ -31,3 +45,5 @@ if __name__ == "__main__":
 
     a = 1012
     print(str(a) == str(a)[::-1])
+
+    print("")
