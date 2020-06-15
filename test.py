@@ -4,6 +4,7 @@ import os
 from collections import Iterable
 
 
+# 关键字参数
 def guanjianzi_param_2(name, *, city, ff):
     print(name, city, ff)
 
@@ -25,6 +26,7 @@ def move(n, a, b, c):
         move(n - 1, b, a, c)
 
 
+# 斐波那契数列 生成器
 def fib(num):
     n, a, b = 0, 0, 1
     while n < num:
@@ -33,15 +35,23 @@ def fib(num):
         n = n + 1
 
 
+# 杨辉三角 生成器
 def triangles():
     a = [1]
     while True:
         yield a
-        a = [([0] + a)[x] + (a + [0])[x] for x in range(len(a)+1)]
+        a = [([0] + a)[x] + (a + [0])[x] for x in range(len(a) + 1)]
 
 
 if __name__ == "__main__":
     guanjianzi_param_2("对方", city=1, ff="d")
+    # 迭代
+    its = iter((1, 2, 3, 4))
+    while True:
+        try:
+            print(next(its))
+        except StopIteration:
+            break
     print(fact(5, 1))
     move(3, "A", "B", "C")
     print(isinstance({1, 2, 3}, Iterable))
