@@ -5,6 +5,9 @@ from types import MethodType
 
 class Student(object):
     _score = 0
+    grade = 1
+    i = 0
+    kemu = ['a', 'b', 'c']
 
     # 限制属性
     # __slots__ = ("name")
@@ -31,12 +34,31 @@ class Student(object):
             raise ValueError("value must between 0 and 100")
         self._score = value
 
+    # 用户显示
+    def __str__(self):
+        return "student name=%s" % self.name
+
+    # 开发者显示与用户显示相等
+    __repr__ = __str__
+
+    # 可迭代
+    def __iter__(self):
+        return self.kemu
+
+    def __next__(self):
+        if self.i >= len(self.kemu):
+            raise StopIteration
+        item = self.kemu[self.i]
+        self.i += 1
+        return item
+
 
 def set_age(self, age):
     self.age = age
 
 
 s = Student("lilei")
+s1 = Student("laowang")
 print(s.name)
 print("name=" + getattr(s, "name"))
 # 绑定方法
@@ -44,7 +66,14 @@ s.set_age = MethodType(set_age, s)
 s.set_age(18)
 print(s.age)
 # 设置属性@property
-print(s.score)
+s.grade = 11
+print("s.grade=%d" % s.grade)
+print("s1.grade=%d" % s1.grade)
+# 显示__str__
+print(s)
+# 迭代 __iter__
+for km in s:
+    print("km=" + km)
 try:
     s.score = "s"
 except:

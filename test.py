@@ -1,5 +1,6 @@
 # coding:utf-8
 import math
+import win32api
 import os
 from collections import Iterable
 
@@ -43,6 +44,13 @@ def triangles():
         a = [([0] + a)[x] + (a + [0])[x] for x in range(len(a) + 1)]
 
 
+def get_file_version(file_name):
+    info=win32api.GetFileVersionInfo(file_name,os.sep)
+    ms = info['FileVersionMS']
+    ls = info['FileVersionLS']
+    version = '%d.%d.%d.%d' % (win32api.HIWORD(ms), win32api.LOWORD(ms), win32api.HIWORD(ls), win32api.LOWORD(ls))
+    return version
+
 if __name__ == "__main__":
     guanjianzi_param_2("对方", city=1, ff="d")
     # 迭代
@@ -73,4 +81,5 @@ if __name__ == "__main__":
         i = i + 1
         if i > 10:
             break
-    
+    get_file_version(r"C:\Users\Administrator\Downloads\FrankMonitordll.dll")
+
