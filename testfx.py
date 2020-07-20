@@ -81,6 +81,7 @@ def bin_to_str(s):
     return ''.join([chr(i) for i in [int(b, 2) for b in s.split(' ')]])
 
 
+print("testfx name=" + __name__)
 if __name__ == "__main__":
     # 高阶函数：map、reduce、filter
     print(reduce(combine, map(str2int, "1231231")))

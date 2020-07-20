@@ -1,9 +1,19 @@
-# encoding:utf-8
+# coding:utf-8
 import traceback
 from types import MethodType
+from collections.abc import Iterable
+from enum import Enum, unique
+import testzhuangshiqi
+
+import testfx
 
 
-class Student(object):
+class Person(object):
+    def __init__(self, name):
+        self.name = name;
+
+
+class Student(Person):
     _score = 0
     grade = 1
     i = 0
@@ -20,7 +30,7 @@ class Student(object):
 
     # 构造
     def __init__(self, name):
-        self.name = name
+        super(Student, self).__init__(name)
 
     @property
     def score(self):
@@ -43,7 +53,8 @@ class Student(object):
 
     # 可迭代
     def __iter__(self):
-        return self.kemu
+        self.i = 0
+        return self
 
     def __next__(self):
         if self.i >= len(self.kemu):
@@ -52,9 +63,52 @@ class Student(object):
         self.i += 1
         return item
 
+    # 下标获取对象
+    def __getitem__(self, item):
+        if item >= len(self.kemu) or item + len(self.kemu) < 0:
+            raise OverflowError
+        return self.kemu[item]
+
+    # 获取未定义属性、方法 (可以作为链式传值) return Student(xxx)
+    def __getattr__(self, item):
+        if "ws" == item:
+            return 99
+        if "add" == item:
+            return lambda x, y: x + y
+
+    # Callable
+    def __call__(self, *args, **kwargs):
+        return "my name is {0}".format(self.name)
+
+
+class ListMetaClass(type):
+    def __new__(cls, name, bases, attrs):
+        attrs['add'] = lambda self, value: self.append(value)
+        return type.__new__(cls, name, bases, attrs)
+
+
+class MyList(list, metaclass=ListMetaClass):
+    pass
+
 
 def set_age(self, age):
     self.age = age
+
+
+# 检查唯一
+@unique
+class Weekday(Enum):
+    Sun = 0  # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+
+
+def fn(self):
+    print('hello world')
 
 
 s = Student("lilei")
@@ -72,8 +126,12 @@ print("s1.grade=%d" % s1.grade)
 # 显示__str__
 print(s)
 # 迭代 __iter__
+print(isinstance(s, Iterable))
 for km in s:
     print("km=" + km)
+
+print("s[0]=%s" % s[0])
+
 try:
     s.score = "s"
 except:
@@ -91,3 +149,24 @@ try:
     print("{0:2X},{1:.2f},{2}".format(11, 2.456, 3))
 except:
     print(traceback.format_exc())
+print("s.add(1,2)=%d" % s.add(1, 2))
+print("callbale=" + str(callable(s)), s())
+
+# 枚举
+Week = Enum("Week", ("Mon", "Tue"))
+for name, member in Week.__members__.items():
+    print(name, '=>', member, ',', member.value)
+
+# 元类
+Student2 = type('Student2', (object,), dict(hello=fn))
+s2 = Student2()
+s2.hello()
+# metaclass
+myList = MyList()
+myList.add("b")
+testfx.combine(1, 2)
+try:
+    with open("dd.txt", "r") as fp:
+        pass
+except:
+    pass

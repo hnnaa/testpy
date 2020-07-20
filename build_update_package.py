@@ -6,6 +6,7 @@ import hashlib
 import shutil
 
 
+
 def get_file_version(file_name):
     info = win32api.GetFileVersionInfo(file_name, os.sep)
     ms = info['FileVersionMS']
