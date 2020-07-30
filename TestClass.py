@@ -63,7 +63,7 @@ class Student(Person):
         self.i += 1
         return item
 
-    # 下标获取对象
+    # 下标获取对象 切片 slice
     def __getitem__(self, item):
         if item >= len(self.kemu) or item + len(self.kemu) < 0:
             raise OverflowError
@@ -79,6 +79,22 @@ class Student(Person):
     # Callable
     def __call__(self, *args, **kwargs):
         return "my name is {0}".format(self.name)
+
+
+# __getattr__()链式结构
+class Chain(object):
+    _path = ''
+
+    def __init__(self, path=''):
+        self._path = path
+
+    def __str__(self):
+        return self._path
+
+    def __getattr__(self, item):
+        if "users" == item:
+            return lambda x: Chain('%s/%s/%s' % (self._path, item, x))
+        return Chain(('%s/%s' % (self._path, item)))
 
 
 class ListMetaClass(type):
@@ -111,6 +127,87 @@ def fn(self):
     print('hello world')
 
 
+# 元类实现ORM
+class Field(object):
+    def __init__(self, name, column_type):
+        self.name = name
+        self.column_type = column_type
+
+    def __str__(self):
+        return 'name=%s;column_type=%s' % (self.name, self.column_type)
+
+
+class IntegerField(Field):
+    def __init__(self, name):
+        super(IntegerField, self).__init__(name, 'bigint')
+
+
+class StringField(Field):
+    def __init__(self, name):
+        super(StringField, self).__init__(name, 'varchar(100)')
+
+
+class ModelMetaClass(type):
+    def __new__(cls, name, bases, attr):
+        print("call ModelMetaClass" + name)
+        if 'Model' == name:
+            return type.__new__(cls, name, bases, attr)
+        mapping = {}
+        for k, v in attr.items():
+            if isinstance(v, Field):
+                mapping[k] = v
+        for k in mapping.keys():
+            attr.pop(k)
+        attr['__mappings__'] = mapping
+        attr['__table__'] = name
+        return type.__new__(cls, name, bases, attr)
+
+
+class Model(dict, metaclass=ModelMetaClass):
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def save(self):
+        fields = []
+        params = []
+        args = []
+        for k, v in self.__mappings__.items():
+            fields.append(v.name)
+            params.append('?')
+            args.append(getattr(self, k, None))
+        sql = "insert into %s (%s) values (%s)" % (self.__table__, ','.join(fields), ','.join(params))
+        print('sql=' + sql)
+        print('args:' + str(args))
+
+
+class User(Model):
+    id = IntegerField('uid')
+    name = StringField('uname')
+
+
+class InsClass(object):
+    name = 's'
+
+    def __getattr__(self, item):
+        if item == 'name':
+            return 'b'
+
+    def set_stu(self, stu: Student):
+        self.stu = stu
+
+
+# 类属性、实例属性
+ic = InsClass()
+print('brfore:' + str(ic.__dict__))
+ic.name = '1'
+print('after:' + str(ic.__dict__))
+print(ic.name)
 s = Student("lilei")
 s1 = Student("laowang")
 print(s.name)
@@ -152,6 +249,9 @@ except:
 print("s.add(1,2)=%d" % s.add(1, 2))
 print("callbale=" + str(callable(s)), s())
 
+test_chain = Chain().users('jack').status.okl
+print("test_chain=", test_chain)
+
 # 枚举
 Week = Enum("Week", ("Mon", "Tue"))
 for name, member in Week.__members__.items():
@@ -164,9 +264,9 @@ s2.hello()
 # metaclass
 myList = MyList()
 myList.add("b")
-testfx.combine(1, 2)
-try:
-    with open("dd.txt", "r") as fp:
-        pass
-except:
-    pass
+
+ur = User(id=3, name='zmq')
+ur.save()
+
+# ORM展现元类
+print("end")
