@@ -3,6 +3,7 @@ import math
 import win32api
 import os
 from collections import Iterable
+from functools import reduce
 
 
 # 关键字参数
@@ -53,6 +54,18 @@ def get_file_version(file_name):
 
 
 if __name__ == "__main__":
+    # 切片
+    ls = ["1", "2"]
+    ls2 = ls[0:4]
+    print(str(ls[0:2]))
+    info1 = "11724   112 10032    S     899m 89.5   1 10.2 {.postoffice:rtc} com.reformer.pos\n"
+    print(len(info1))
+    alst = [x.strip(" ") for x in info1.split(" ") if x.strip(" ") != ""]
+    stra = "cpu占用:%s=%s%%;" % (reduce(lambda x, y: x + " " + y, alst[8:]).strip('\n'), alst[7])
+    info2 = "11724   921760K   40552K   17317K   13708K  com.reformer.postoffice:rtc\n"
+    alst = [x.strip(" ") for x in info2.split(" ") if x.strip(" ") != ""]
+    stra = "内存占用:%s=%s;" % (" ".join(alst[5:]).strip('\n'), alst[2])
+    # 关键字参数
     guanjianzi_param_2("对方", city=1, ff="d")
     # 迭代
     its = iter((1, 2, 3, 4))
@@ -82,7 +95,7 @@ if __name__ == "__main__":
         i = i + 1
         if i > 10:
             break
-    for i, value in enumerate(range(1,10)):
+    for i, value in enumerate(range(1, 10)):
         print("i=%d,value=%d" % (i, value))
 
     get_file_version(r"C:\Users\Administrator\Downloads\FrankMonitordll.dll")
