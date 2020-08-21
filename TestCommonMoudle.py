@@ -1,6 +1,9 @@
 # coding:utf-8
 import base64
+import hashlib
+import hmac
 import re
+import struct
 from collections import namedtuple, deque, defaultdict, OrderedDict, ChainMap, Counter
 from datetime import datetime, timedelta, timezone
 
@@ -52,6 +55,8 @@ print("2.collections")
 Point = namedtuple("Point", ["x", "y"])
 p = Point(1, 2)
 print(p.x, p.y)
+p2 = Point._make((2, 3))
+print(p2.x, p2.y)
 # deque 是为了高效实现插入和删除操作的双向列表，适合用于队列和栈
 q = deque(["a", "b", "c"])
 q.appendleft("f")
@@ -85,3 +90,38 @@ print(base64.b64encode(b'i\xb7\x1d\xfb\xef\xff'))
 print(base64.urlsafe_b64encode(b'i\xb7\x1d\xfb\xef\xff'))
 
 # struct 解决byte的转换
+print("struct...")
+print(struct.pack('>I', 1024009))  # >:大端 I:四字节无符号 H:2字节无符号 c:单字节
+print(struct.unpack('>H', b'\x00\x01'))
+print(struct.unpack('>H', b'\x01\x00'))
+
+# hashlib 摘要算法  什么是摘要算法呢？摘要算法又称哈希算法、散列算法。它通过一个函数，把任意长度的数据转换为一个长度固定的数据串（通常用16进制的字符串表示）。
+print("hashlib...")
+s2 = 'how to use md5 in python hashlib?'
+md5 = hashlib.md5()
+md5.update(s2.encode('utf-8'))
+print("md5=" + md5.hexdigest())
+sha1 = hashlib.sha1()
+sha1.update(s2.encode("utf-8"))
+print("sha1=" + sha1.hexdigest())
+
+# hmac
+message = b'hello world'
+key = b'se'
+h = hmac.new(key, message, digestmod='MD5')
+# 如果消息很长，可以多次调用h.update(msg)
+print("hmac=" + h.hexdigest())
+
+# itertools 操作迭代对象的函数。
+import itertools
+
+natuals = itertools.count(1)  # 创建无限额自然数迭代器
+ns = itertools.takewhile(lambda x: x <= 10, natuals)  # takewhile 截断
+print(type(ns))
+print(list(ns))
+cs = itertools.cycle('ABC')  # cycle 无限循环序列 注意字符串也是序列的一种
+for c in cs:
+    print(c)
+    if c == 'C':
+        break
+ns = itertools.repeat('A', 3)  # repeat 重复一个元素

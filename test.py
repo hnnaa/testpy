@@ -1,15 +1,16 @@
 # coding:utf-8
 import math
 import win32api
-import os
+import os, sys
 from collections import Iterable
 from functools import reduce
 
-g_test_list=[]
+g_test_list = []
 
 
 def add_list(str):
     g_test_list.append(str)
+
 
 # 关键字参数
 def guanjianzi_param_2(name, *, city, ff):
@@ -106,3 +107,6 @@ if __name__ == "__main__":
     # get_file_version(r"C:\Users\Administrator\Downloads\FrankMonitordll.dll")
     add_list("d")
     print(g_test_list)
+
+    s=os.system(r'ping baidu.com')
+    print(s)
