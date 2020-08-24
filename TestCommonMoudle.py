@@ -91,9 +91,11 @@ print(base64.urlsafe_b64encode(b'i\xb7\x1d\xfb\xef\xff'))
 
 # struct 解决byte的转换
 print("struct...")
-print(struct.pack('>I', 1024009))  # >:大端 I:四字节无符号 H:2字节无符号 c:单字节
+print(struct.pack('>I', 1024009))  # >:大端 I:四字节无符号 H:2字节无符号 c:char
 print(struct.unpack('>H', b'\x00\x01'))
 print(struct.unpack('>H', b'\x01\x00'))
+print(struct.unpack('c', b'\x41'))
+print(list(bytearray.fromhex('fbd32456')))
 
 # hashlib 摘要算法  什么是摘要算法呢？摘要算法又称哈希算法、散列算法。它通过一个函数，把任意长度的数据转换为一个长度固定的数据串（通常用16进制的字符串表示）。
 print("hashlib...")
@@ -125,3 +127,15 @@ for c in cs:
     if c == 'C':
         break
 ns = itertools.repeat('A', 3)  # repeat 重复一个元素
+for c in itertools.chain(['a', 'b'], ['c', 'd']):  # chain 串联迭代对象
+    print(c)
+for key, group in itertools.groupby('AABBccDADaa', lambda c: c.upper()):  # 将迭代对象中相邻的重复元素挑出来放在一起
+    print(key, list(group))
+
+
+def pi(N):
+    newlist = itertools.takewhile(lambda x: x <= N, itertools.count(1, 2))
+    return sum(map(lambda x: (-1) ** ((x - 1) / 2) * 4 / x, newlist))
+
+
+print(pi(100))
