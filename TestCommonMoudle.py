@@ -5,6 +5,7 @@ import hmac
 import re
 import struct
 from collections import namedtuple, deque, defaultdict, OrderedDict, ChainMap, Counter
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 
 t = 0
@@ -134,8 +135,119 @@ for key, group in itertools.groupby('AABBccDADaa', lambda c: c.upper()):  # 将�
 
 
 def pi(N):
-    newlist = itertools.takewhile(lambda x: x <= N, itertools.count(1, 2))
-    return sum(map(lambda x: (-1) ** ((x - 1) / 2) * 4 / x, newlist))
+    odds = itertools.takewhile(lambda x: x <= 2 * N - 1, itertools.count(1, 2))
+    return sum(map(lambda x: (-1) ** ((x - 1) / 2) * 4 / x, odds))
 
 
-print(pi(100))
+print(pi(1000000))
+
+# 只要正确实现了上下文管理，就可以用于with语句 __enter__和__exit__
+print("contextlib...")
+
+
+class Query(object):
+
+    def __init__(self, name):
+        self.name = name
+        print(name)
+
+    def __enter__(self):
+        print('Begin')
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type:
+            print('Error')
+        else:
+            print('End')
+
+    def query(self):
+        print('Query info about %s...' % self.name)
+
+
+with Query('test with') as f:
+    f.query()
+
+
+# @contextmanager yield(执行with内的代码,也可以加返回)
+@contextmanager
+def do_tasks():
+    print("begin tasks")
+    yield
+    print("end tasks")
+
+
+with do_tasks():
+    print("do task 1")
+    print("do task 2")
+
+# @closing  将没有实现上下文的对象用变为上下问对象
+from contextlib import closing
+
+
+class NoContext:
+    def __init__(self, name):
+        self.name = name
+
+    def show(self):
+        print(self.name + " show")
+
+    def close(self):
+        print(self.name + " closed")
+
+
+with closing(NoContext("NoContext!!")) as f:
+    f.show()
+
+# urllib 操作url的功能
+print("urllib...")
+from urllib import request
+
+with request.urlopen("http://www.baidu.com") as f:
+    data = f.read()
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print(k + ":" + v)
+
+# urlopen() 只需要把参数data以bytes形式传入。
+req1 = request.Request("http://saastest.parking24.cn/propConfigcenter/prop/fetch.do",
+                       data=b"{\"series_no\":\"52425430000000000000012190727005\",\"encode\":\"false\"}")
+req1.add_header("content-type", "application/json")
+with request.urlopen(req1) as f2:
+    print(f2.read())
+# HTMLParser
+from html.parser import HTMLParser
+from html.entities import name2codepoint
+
+
+class MyHTMLParser(HTMLParser):
+
+    def handle_starttag(self, tag, attrs):
+        print('<%s>' % tag)
+
+    def handle_endtag(self, tag):
+        print('</%s>' % tag)
+
+    def handle_startendtag(self, tag, attrs):
+        print('<%s/>' % tag)
+
+    def handle_data(self, data):
+        print(data)
+
+    def handle_comment(self, data):
+        print('<!--', data, '-->')
+
+    def handle_entityref(self, name):
+        print('&%s;' % name)
+
+    def handle_charref(self, name):
+        print('&#%s;' % name)
+
+
+parser = MyHTMLParser()
+parser.feed('''<html>
+<head></head>
+<body>
+<!-- test html parser -->
+    <p>Some <a href=\"#\">html</a> HTML&nbsp;tutorial...<br>END</p>
+</body></html>''')
