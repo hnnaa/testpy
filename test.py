@@ -1,5 +1,7 @@
 # coding:utf-8
 import math
+import time
+
 import win32api
 import os, sys
 from collections import Iterable
@@ -108,5 +110,8 @@ if __name__ == "__main__":
     add_list("d")
     print(g_test_list)
 
-    s=os.system(r'ping baidu.com')
+    s = os.system(r'ping baidu.com')
     print(s)
+
+    tt1 = time.strptime("2020-08-27 02:30:30", "%Y-%m-%d %H:%M:%S")
+    print(time.strftime("%H:%M:%S", tt1))
