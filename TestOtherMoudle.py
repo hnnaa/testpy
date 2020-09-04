@@ -1,8 +1,11 @@
 # coding:utf-8
+import gzip
 import os
 import random
+from io import StringIO
 
 from PIL import Image, ImageFilter, ImageDraw, ImageFont
+from io import BytesIO
 
 print("pillow...")  # 图像处理
 # 打开一个jpg图像文件，注意是当前路径:
@@ -70,9 +73,19 @@ print(r2.text)
 print(r2.json())
 print(r2.content)
 # 上传文件
-# up_f = {"file": open("code.jpg", "rb")}
-# r_file = requests.post("http://saastest.parking24.cn/propConfigcenter/prop/fetch.do", files=up_f)
-# r.cookies  get(url,timeout=?)
+compressed_data = gzip.compress("yoyoyo,n sdgvfdvdkl司法解释的规定发士大夫感到dsadsfdskfjdkfvbdfdddddddsfdfdvgdff大概的发表反对赌东道赌东道赌东道赌东道\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+fbbbbbbbbbbbbbbbbbbadsadassssssssssdfsd".encode("utf-8"))
+up_f = {"file": ("CFBox_70000015_52425430000000000000012190727005_2020_09_01_11_21_07.txt.gz", BytesIO(compressed_data),
+                 "application/x-gzip")}
+r_file = requests.post("http://acscloudtest.parking24.cn:8080/cloudlogs/upload/logfile.htmls", files=up_f \
+                       , headers={"parkid": "70000015"})
+
+# get(url, timeout=?)
 
 # chardet 检测编码
 import chardet

@@ -1,4 +1,5 @@
 # encoding:utf-8
+import gzip
 import json
 import pickle
 from io import StringIO
@@ -41,3 +42,18 @@ class Student(object):
 st = json.loads(s, object_hook=lambda d: Student(d['name'], d['age']))
 st2str = json.dumps(s, default=lambda s: s.__dict__)
 print(st2str)
+
+# gzip
+uncompressed_data = "yoyoyo,n sdgvfdvdkl司法解释的规定发士大夫感到dsadsfdskfjdkfvbdfdddddddsfdfdvgdff大概的发表反对赌东道赌东道赌东道赌东道\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+大师傅但是v地方v豆瓣电饭煲电饭煲大哥v的发表v法担保法大部分的贝多芬发DVD发布电饭煲电饭煲电饭煲bdfbdfbdfadasfdgdffffffffffffffffffffffffffffffs\
+fbbbbbbbbbbbbbbbbbbadsadassssssssssdfsd"
+bt_uncompressed_data = uncompressed_data.encode("utf-8")
+print("uncompressed_data bt_len=%d,=%s" % (len(bt_uncompressed_data), uncompressed_data))
+compressed_data = gzip.compress(bt_uncompressed_data)
+print("compressed_data len=%d,=%s" % (len(compressed_data), compressed_data))
+de_data = gzip.decompress(compressed_data)
+print("de_data=%s" % de_data.decode("utf-8"))
