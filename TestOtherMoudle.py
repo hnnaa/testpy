@@ -102,8 +102,8 @@ print(d_c, chardet.detect(d_c.encode('euc-jp')))
 import psutil
 
 print("psutil...")
-print("CPU逻辑数量=",psutil.cpu_count())  # CPU逻辑数量
-print("CPU物理核心=",psutil.cpu_count(logical=False))  # CPU物理核心
+print("CPU逻辑数量=", psutil.cpu_count())  # CPU逻辑数量
+print("CPU物理核心=", psutil.cpu_count(logical=False))  # CPU物理核心
 print(psutil.cpu_times())  # 统计CPU的用户／系统／空闲时间：
 print(psutil.pids())  # 所有进程ID
 print(psutil.test())
