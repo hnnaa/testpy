@@ -1,14 +1,15 @@
+# coding:utf-8
 import unittest
 from MyDict import MyDict
 
 
 class MyDictUnitTest(unittest.TestCase):
     # 测试项执行前动作
-    def setUp(self) -> None:
+    def setUp(self):
         print("set up!")
 
     # 测试项结束后动作
-    def tearDown(self) -> None:
+    def tearDown(self):
         print("tear down!")
 
     def test_init(self):

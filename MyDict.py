@@ -3,7 +3,7 @@
 
 class MyDict(dict):
     def __init__(self, **kw):
-        super().__init__(**kw)
+        super(MyDict, self).__init__(**kw)
 
     def __getattr__(self, key):
         try:
