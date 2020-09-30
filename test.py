@@ -1,5 +1,7 @@
 # coding:utf-8
+import Queue
 import math
+import threading
 import time
 
 import win32api
@@ -14,9 +16,9 @@ def add_list(str):
     g_test_list.append(str)
 
 
-# 关键字参数
-def guanjianzi_param_2(name, *, city, ff):
-    print(name, city, ff)
+# 关键字参数 py3
+# def guanjianzi_param_2(name, *, city, ff):
+#     print(name, city, ff)
 
 
 # 尾递归优化
@@ -61,6 +63,42 @@ def get_file_version(file_name):
     return version
 
 
+def cal_crc(ptr, length):
+    crc = 0
+    for j in range(length):
+        for k in range(8):
+            if crc & 0x8000:
+                crc *= 2
+                crc ^= 0x1021
+            else:
+                crc *= 2
+            if ptr[j] & (0x80 >> k):
+                crc ^= 0x1021
+        crc &= 0xFFFF
+        print ("crc=" + str(crc))
+    return hex(crc).upper()
+
+
+ORDER_ID = 1
+
+
+class Eo:
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
+def get_order_id():
+    global ORDER_ID
+    with Eo():
+        ORDER_ID += 1
+        if ORDER_ID > 0xFFFF:
+            ORDER_ID = 1
+        return ORDER_ID
+
+
 if __name__ == "__main__":
     # 切片
     ls = ["1", "2"]
@@ -74,7 +112,7 @@ if __name__ == "__main__":
     alst = [x.strip(" ") for x in info2.split(" ") if x.strip(" ") != ""]
     stra = "内存占用:%s=%s;" % (" ".join(alst[5:]).strip('\n'), alst[2])
     # 关键字参数
-    guanjianzi_param_2("对方", city=1, ff="d")
+    # guanjianzi_param_2("对方", city=1, ff="d")
     # 迭代
     its = iter((1, 2, 3, 4))
     while True:
@@ -110,8 +148,39 @@ if __name__ == "__main__":
     add_list("d")
     print(g_test_list)
 
-    s = os.system(r'ping baidu.com')
-    print(s)
+    # s = os.system(r'ping baidu.com')
+    # print(s)
 
     tt1 = time.strptime("2020-08-27 02:30:30", "%Y-%m-%d %H:%M:%S")
     print(time.strftime("%H:%M:%S", tt1))
+
+    q = Queue.Queue(10)
+    try:
+        q.get_nowait()
+    except:
+        print ("no get_nowait data")
+
+    head = bytearray(2)
+    head[0] = ord('D')
+    head[1] = 43
+
+    print (head[0], head[1])
+
+    abcc = {x for x in range(10)}
+
+    bts = bytearray(255)
+    for ii in range(len(bts)):
+        bts[ii] = ii
+    ress = cal_crc(bts, len(bts))
+
+    print (len("中国"))
+    get_order_id()
+
+    bb=bytearray('中国\x33\x34')
+    print str([r for r in bb])
+    c=str(bb)
+    text = "余位" + "%04d" % 123
+    def _m():
+        pass
+
+    print (type(_m))

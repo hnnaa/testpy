@@ -7,7 +7,7 @@ from io import BytesIO
 import shutil
 
 f = StringIO()
-f.write("abc")
+f.write("abc".decode())
 print(f.getvalue())
 f.close()
 
@@ -42,6 +42,8 @@ class Student(object):
 st = json.loads(s, object_hook=lambda d: Student(d['name'], d['age']))
 st2str = json.dumps(s, default=lambda s: s.__dict__)
 print(st2str)
+
+ss2=json.dumps({"resCode": "-1"}, ensure_ascii=False)
 
 # gzip
 uncompressed_data = "yoyoyo,n sdgvfdvdkl司法解释的规定发士大夫感到dsadsfdskfjdkfvbdfdddddddsfdfdvgdff大概的发表反对赌东道赌东道赌东道赌东道\

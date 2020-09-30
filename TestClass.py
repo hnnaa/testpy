@@ -80,6 +80,10 @@ class Student(Person):
     def __call__(self, *args, **kwargs):
         return "my name is {0}".format(self.name)
 
+    @classmethod
+    def get_classmethod(cls):
+        pass
+
 
 # __getattr__()链式结构
 class Chain(object):
@@ -198,7 +202,7 @@ class InsClass(object):
         if item == 'name':
             return 'b'
 
-    def set_stu(self, stu: Student):
+    def set_stu(self, stu):
         self.stu = stu
 
 

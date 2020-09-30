@@ -46,6 +46,6 @@ t2 = threading.Thread(target=t_do_minus, name="t2")
 t2.start()
 
 t2.join()
-
+threading.Semaphore
 
 
